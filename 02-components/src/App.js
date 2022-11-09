@@ -1,8 +1,10 @@
 
 import React from 'react'
 import ImageFrame from './ImageFrame'
+import ImageFrame2 from "./ImageFrame2"
 import DisplayMessage from "./DisplayMessage"
 import BorderedImageFrame from './BorderedImageFrame';
+import SumOfTwo from './SumOfTwo';
 import TwoBoxesComponents from './components/TwoBoxes';
 
 // Just as functions have parameters, so can components recieve parameters as well
@@ -41,6 +43,8 @@ function App() {
         {greetings}
         <ImageFrame />
         <BorderedImageFrame />
+        <ImageFrame2 imageURL="cherry.jpg"/>
+        <SumOfTwo n1={3} n2={2}/>
       </div>
     </React.Fragment>
   );
