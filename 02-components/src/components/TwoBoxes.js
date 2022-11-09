@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function TwoBoxes() {
     // JSX must only have one root (i.e top level) element
     return <React.Fragment>
