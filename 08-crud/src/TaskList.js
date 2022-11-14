@@ -20,7 +20,10 @@ export default class TaskList extends React.Component {
                 "done": false
             }
         ],
-        'newTaskName': ""
+        'newTaskName': "",
+        'editedTaskName':"",
+        'taskBeingEdited': null  // remember which task is being edited right now
+                                // if null, means no task being edited
     }
 
     updateFormField = (e) =>{
@@ -90,6 +93,52 @@ export default class TaskList extends React.Component {
         
     }
 
+    // the task parameter is the task that is being edited
+    beginEditTask = (task) => {
+        this.setState({
+            'taskBeingEdited': task,
+            'editedTaskName': task.description
+        })
+    }
+
+    processEditTask = () => {
+        // clone the task that is being editd
+        // const clonedTask = { ...this.state.taskBeingEdited};
+        // clonedTask.description = this.state.editedTaskName;
+
+        const clonedTask = {
+            ...this.state.taskBeingEdited,
+            description: this.state.editedTaskName
+        }
+
+        // when you spread an object, all the key/values pairs of objects extracted out
+        // and seperated by a coma
+        // =>
+        // {
+        //    id: 1
+        //    description: "Walk the dog",
+        //    done: false,
+        //    description: this.state.editedTaskName
+        // }
+
+        const indexToReplace = this.state.tasks.findIndex( eachTask => eachTask.id === clonedTask.id);
+        const left = this.state.tasks.slice(0, indexToReplace);
+        const right = this.state.tasks.slice(indexToReplace+1);
+        const modified = [...left, clonedTask, ...right];
+
+        this.setState({
+            'tasks': modified,
+            'taskBeingEdited': null
+        })
+
+    }
+
+    cancelEdit = ()=>{
+        this.setState({
+            'taskBeingEdited': null
+        })
+    }
+
     render() {
         return (<React.Fragment>
             <h1>Todo List</h1>
@@ -103,16 +152,39 @@ export default class TaskList extends React.Component {
             <ul>
             {
                 this.state.tasks.map((eachTask)=>{
-                    return (
-                        <li key={eachTask.id}>
-                            {eachTask.description}
-                            <input type="checkbox" checked={eachTask.done} onChange={()=>{
-                                this.checkTask(eachTask)
-                            }}/>
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        </li>
-                    )
+                    // eachTask is the task object that is going to be displayed
+                    if (this.state.taskBeingEdited && 
+                        eachTask.id === this.state.taskBeingEdited.id ) {
+                        //this current task that we are rendering is being edited
+                        //so display a form instead
+                        return (
+                            <li key={eachTask.id}>
+                                <input type="text"
+                                       name="editedTaskName"
+                                       value={this.state.editedTaskName}
+                                       onChange={this.updateFormField}
+                                />
+                                <button onClick={this.processEditTask}>Update</button>
+                                <button onClick={this.cancelEdit}>Cancel</button>
+                            </li>
+                        )
+
+                    } else {
+                        return (
+                            <li key={eachTask.id}>
+                                {eachTask.description}
+                                <input type="checkbox" checked={eachTask.done} onChange={()=>{
+                                    this.checkTask(eachTask)
+                                }}/>
+                                <button onClick={()=>{
+                                    this.beginEditTask(eachTask)
+                                }}>Edit</button>
+                                <button>Delete</button>
+                            </li>
+                        )
+                    }
+
+                  
                 })
             }
             </ul>
