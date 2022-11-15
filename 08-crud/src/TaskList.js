@@ -139,6 +139,28 @@ export default class TaskList extends React.Component {
         })
     }
 
+    deleteTask = (task) => {
+        // find the index of the task that we want to delete
+        let indexToDelete = this.state.tasks.findIndex(t => t._id == task._id );
+
+        // the "traditional" method
+        // let cloned = this.state.tasks.slice();
+        // cloned.splice(indexToDelete, 1); // start deleting at indexToDelete and delete only 1
+        // this.setState({
+        //     'tasks': cloned
+        // })
+
+        // the functional programming method
+        // find the left side of the array -- ending right before what we want to delete
+        const left = this.state.tasks.slice(0, indexToDelete);
+        // find the right side of the array -- starting at the index one AFTER what we want to delete
+        const right = this.state.tasks.slice(indexToDelete + 1)
+        const modified = [...left, ...right];
+        this.setState({
+            'tasks': modified
+        })
+    }
+
     render() {
         return (<React.Fragment>
             <h1>Todo List</h1>
@@ -179,7 +201,9 @@ export default class TaskList extends React.Component {
                                 <button onClick={()=>{
                                     this.beginEditTask(eachTask)
                                 }}>Edit</button>
-                                <button>Delete</button>
+                                <button onClick={()=>{
+                                    this.deleteTask(eachTask)
+                                }}>Delete</button>
                             </li>
                         )
                     }
