@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs'
 import ContactUs from './pages/ContactUs.js';
 import SubmittedForm from './pages/SubmittedForm';
+import Posts from './pages/Posts';
+import SpecificPost from './pages/SpecificPost';
 
 export default function App() {
   return (
@@ -13,6 +15,8 @@ export default function App() {
           <li><Link to="/">Home</Link></li>
           <li><Link to="/about-us">About Us</Link></li>
           <li><Link to="/contact-us">Contact Us</Link></li>
+          <li><Link to="/posts">Posts</Link></li>
+          <li><Link to="/specific-post">See a Specific Post</Link></li>
     
         </ul>
       </nav>
@@ -33,6 +37,10 @@ export default function App() {
         <Route path="/contact-us" element={
           <ContactUs/>
         }/>
+
+        <Route path="/posts" element={<Posts/>}/>
+
+        <Route path='/specific-post' element={<SpecificPost/>}/>
 
         <Route path="/submitted" element={
           <SubmittedForm/>
