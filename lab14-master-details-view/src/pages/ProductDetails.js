@@ -1,4 +1,4 @@
-import {Fragment, useState, useEffect, useContext} from 'react'
+import {Fragment, useState, useEffect, useContext, useCallback} from 'react'
 import {useParams} from 'react-router-dom'
 import ProductContext from '../ProductContext'
 
@@ -8,10 +8,14 @@ export default function ProductDetails(){
     const productContext = useContext(ProductContext);
     const [product, setProduct] = useState({});
 
+    const getProductByID = useCallback((productId)=>{
+        return productContext.getProductByID(parseInt(productId));
+    }, [productContext])
+
     useEffect(function(){
-        const wantedProduct =  productContext.getProductByID(parseInt(params.product_id))
+        const wantedProduct = getProductByID(params.product_id);
         setProduct(wantedProduct);
-    }, [params])
+    }, [params, getProductByID])
 
     return <Fragment>
         <h1>Product Details</h1>

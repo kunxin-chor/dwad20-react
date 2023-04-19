@@ -1,5 +1,5 @@
 import ProductContext from "./ProductContext";
-import {Fragment, useState} from 'react'
+import { useState, useMemo } from 'react'
 
 export default function ProductProvider(props) {
     const [products, setProducts] = useState([
@@ -8,25 +8,27 @@ export default function ProductProvider(props) {
         { id: 3, product_name: "ACME Screwdriver", cost: 12.5 }
     ])
 
-    const productContext = {
-        getProducts:() => {
-            return products;
-        },
-        getProductByID:(productId) => {
-            return products.find(p => p.id === productId)
-        },
-        addProduct:(productName, cost) => {
-            // use the restful API to create the product at the backend
-            // then use the id from the backend
-            const newProduct = {
-                id: Math.random() * 100000 + 1,
-                product_name: productName,
-                cost: cost
+    const productContext = useMemo(() => {
+        return {
+            getProducts: () => {
+                return products;
+            },
+            getProductByID: (productId) => {
+                return products.find(p => p.id === productId)
+            },
+            addProduct: (productName, cost) => {
+                // use the restful API to create the product at the backend
+                // then use the id from the backend
+                const newProduct = {
+                    id: Math.random() * 100000 + 1,
+                    product_name: productName,
+                    cost: cost
+                }
+                const modified = [...products, newProduct];
+                setProducts(modified);
             }
-            const modified = [...products, newProduct];
-            setProducts(modified);
         }
-    }
+    }, [products]);
 
     return <ProductContext.Provider value={productContext}>
         {props.children}
